@@ -1,4 +1,6 @@
-from flask import Flask, request
+from flask import Flask, jsonify
+from marshmallow import ValidationError
+from project.projects import views
 from project.db import db
 from project.ping import ping_blueprint
 
@@ -15,6 +17,12 @@ def create_app(script_info=None):
 
     # register blueprints
     app.register_blueprint(ping_blueprint)
+    app.register_blueprint(views.blueprint)
+
+    # register error handling
+    @app.errorhandler(ValidationError)
+    def handle_marshmallow_validation(err):
+        return jsonify(err.messages), 400
 
     return app
 

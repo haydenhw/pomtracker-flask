@@ -1,12 +1,15 @@
 import json
+import pytest
 from project.projects.views import \
     PROJECTS_PATH, CREATED_SUCCESSFULLY, UPDATED_SUCCESSFULLY, PROJECT_ALREADY_EXISTS, PROJECT_NOT_FOUND
-
 from project.projects.models import Project
 
-# Test POST endpoint
-def test_create_project(test_app, test_db):
+@pytest.fixture(autouse=True)
+def clear_db(test_app, test_db):
     test_db.session.query(Project).delete()
+
+# Test POST endpoint
+def test_create_project(test_app):
     test_project = dict(project_name='Learn Django')
     client = test_app.test_client()
     resp = client.post(
@@ -20,8 +23,7 @@ def test_create_project(test_app, test_db):
     assert CREATED_SUCCESSFULLY in data['message']
 
 
-def test_create_project_already_exists(test_app, test_db):
-    test_db.session.query(Project).delete()
+def test_create_project_already_exists(test_app):
     test_project = dict(project_name='Learn Django')
     project = Project(**test_project)
     Project.save_to_db(project)
@@ -38,8 +40,7 @@ def test_create_project_already_exists(test_app, test_db):
     assert PROJECT_ALREADY_EXISTS in data['message']
 
 
-def test_create_project_invalid_json_payload(test_app, test_db):
-    test_db.session.query(Project).delete()
+def test_create_project_invalid_json_payload(test_app):
     test_project = dict(project_name=None)
     client = test_app.test_client()
     resp = client.post(
@@ -53,7 +54,6 @@ def test_create_project_invalid_json_payload(test_app, test_db):
 
 # Test GET endpoint
 def test_list_projects(test_app, test_db):
-    test_db.session.query(Project).delete()
     test_project1 = Project(project_name='Learn Django')
     test_project2 = Project(project_name='Learn Go')
     test_db.session.add_all([test_project1, test_project2])
@@ -68,10 +68,8 @@ def test_list_projects(test_app, test_db):
     assert data[0]['project_name'] == test_project1.project_name
 
 # Test PATCH Endpoint
-def test_update_project(test_app, test_db):
-    test_db.session.query(Project).delete()
-    test_project = dict(project_name='test project')
-    project = Project(**test_project)
+def test_update_project(test_app):
+    project = Project(project_name='test project')
     project.save_to_db()
 
     updates = dict(project_name='updated name')
@@ -87,14 +85,12 @@ def test_update_project(test_app, test_db):
 
     assert resp.status_code == 200
     assert data['message'] == UPDATED_SUCCESSFULLY
-    assert updated_project['project_name'] == 'updated name'
+    assert updated_project['project_name'] == updates['project_name']
     assert updated_project['id'] == project.id
 
 
-def test_update_project_invalid_json_payload(test_app, test_db):
-    test_db.session.query(Project).delete()
-    test_project = dict(project_name='test project')
-    project = Project(**test_project)
+def test_update_project_invalid_json_payload(test_app):
+    project = Project(project_name='test project')
     project.save_to_db()
 
     updates = dict(project_name=None)
@@ -110,9 +106,7 @@ def test_update_project_invalid_json_payload(test_app, test_db):
     assert data['project_name'][0] == 'Field may not be null.'
 
 
-def test_update_project_not_found(test_app, test_db):
-    test_db.session.query(Project).delete()
-
+def test_update_project_not_found(test_app):
     updates = dict(project_name='updated name')
     client = test_app.test_client()
     resp = client.patch(
@@ -126,10 +120,8 @@ def test_update_project_not_found(test_app, test_db):
     assert data['message'] == PROJECT_NOT_FOUND
 
 
-def test_delete_project(test_app, test_db):
-    test_db.session.query(Project).delete()
-    test_project = dict(project_name='test project')
-    project = Project(**test_project)
+def test_delete_project(test_app):
+    project = Project(project_name='test project')
     project.save_to_db()
 
     client = test_app.test_client()
@@ -146,8 +138,7 @@ def test_delete_project(test_app, test_db):
     assert resp_three.status_code == 200
     assert len(data) == 0
 
-def test_delete_project_not_found(test_app, test_db):
-    test_db.session.query(Project).delete()
+def test_delete_project_not_found(test_app):
     test_project = dict(project_name='test project')
     project = Project(**test_project)
     project.save_to_db()

@@ -1,5 +1,5 @@
 from flask import Flask, request
-from project.models import db, Project
+from project.models import db, ProjectModel
 from project.schemas import project_schema
 from marshmallow import ValidationError
 
@@ -11,7 +11,7 @@ db.init_app(app)
 
 @app.route('/projects/<int:project_id>')
 def project_item(project_id):
-    project = Project.query.filter_by(id=project_id).first()
+    project = ProjectModel.query.filter_by(id=project_id).first()
     result = project_schema.dump(project)
     return result
 
@@ -23,10 +23,10 @@ def post_project():
     except ValidationError as err:
         return err.messages, 400
 
-    if Project.query.filter_by(text=project_data['text']).first():
+    if ProjectModel.query.filter_by(text=project_data['text']).first():
         return {'message': 'Already exists in database'}, 400
 
-    project = Project(**project_data)
+    project = ProjectModel(**project_data)
     project.save_to_db()
-    return {'message': 'Project Created!'}, 201
+    return {'message': 'ProjectModel Created!'}, 201
 

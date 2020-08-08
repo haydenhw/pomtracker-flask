@@ -1,7 +1,7 @@
 import pytest
 import json
 from project import app
-from project.models import Project, db
+from project.models import ProjectModel, db
 
 
 @pytest.fixture(scope='module')
@@ -16,7 +16,7 @@ def ctx():
 
 def test_create_project(ctx):
     db = ctx['test_database']
-    db.session.query(Project).delete()
+    db.session.query(ProjectModel).delete()
     test_project = dict(text='Lean Django')
     client = ctx['test_app'].test_client()
     resp = client.post(
@@ -26,9 +26,9 @@ def test_create_project(ctx):
     )
     data = json.loads(resp.data.decode())
     assert 'message' in data
-    assert 'Project Created!' == data['message']
+    assert 'ProjectModel Created!' == data['message']
     assert resp.status_code == 201
-    db_project = Project.query.filter_by(text=test_project['text']).first()
+    db_project = ProjectModel.query.filter_by(text=test_project['text']).first()
     assert db_project is not None
     assert hasattr(db_project, 'text')
     assert db_project.text == test_project['text']
@@ -36,7 +36,7 @@ def test_create_project(ctx):
 
 def test_create_project_invalid_text_value(ctx):
     db = ctx['test_database']
-    db.session.query(Project).delete()
+    db.session.query(ProjectModel).delete()
     test_project = dict(text=123)
     client = ctx['test_app'].test_client()
     resp = client.post(
@@ -51,8 +51,8 @@ def test_create_project_invalid_text_value(ctx):
 
 def test_create_project_already_exists(ctx):
     db = ctx['test_database']
-    db.session.query(Project).delete()
-    project = Project(text='test_proj')
+    db.session.query(ProjectModel).delete()
+    project = ProjectModel(text='test_proj')
     db.session.add(project)
     db.session.commit()
     test_project = dict(text=project.text)
@@ -68,11 +68,11 @@ def test_create_project_already_exists(ctx):
 
 def test_route(ctx):
     db = ctx['test_database']
-    db.session.query(Project).delete()
-    project = Project(text='test_proj')
+    db.session.query(ProjectModel).delete()
+    project = ProjectModel(text='test_proj')
     db.session.add(project)
     db.session.commit()
-    res = Project.query.filter_by(text='test_proj').first()
+    res = ProjectModel.query.filter_by(text='test_proj').first()
     assert res.text == 'test_proj'
     assert res.id == 1
 

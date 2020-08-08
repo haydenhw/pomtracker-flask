@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from project.projects.models import Project
+from flask.views import MethodView
+from project.projects.models import ProjectModel
 from project.projects.schemas import project_schema, projects_schema
 
 blueprint = Blueprint('projects', __name__)
@@ -14,50 +15,48 @@ PROJECT_DELETED = "Project deleted."
 # Routes
 PROJECTS_PATH = '/projects'
 
-@blueprint.route(PROJECTS_PATH)
-def project_list():
-    projects = Project.query.all()
-    return projects_schema.dumps(projects), 200
+class ProjectList(MethodView):
+    def get(self):
+        projects = ProjectModel.query.all()
+        return projects_schema.dumps(projects), 200
+
+    def post(self):
+        project_data = project_schema.load(request.get_json())
+
+        if ProjectModel.find_by_name(project_data['project_name']):
+            return {'message': PROJECT_ALREADY_EXISTS}, 400
+
+        project = ProjectModel(**project_data)
+        project.save_to_db()
+
+        return {'message': CREATED_SUCCESSFULLY+'fdsa', 'created': project_schema.dumps(project)}, 201
 
 
-@blueprint.route(PROJECTS_PATH, methods=['POST'])
-def create_project():
-    project_data = project_schema.load(request.get_json())
+class Project(MethodView):
+    def patch(self, project_id):
+        if not project_id:
+            return {'message': 'Project id must be supplied in url '}, 400
 
-    if Project.find_by_name(project_data['project_name']):
-        return {'message': PROJECT_ALREADY_EXISTS}, 400
+        if not ProjectModel.find_by_id(project_id):
+            return {'message': PROJECT_NOT_FOUND}, 404
 
-    project = Project(**project_data)
-    project.save_to_db()
+        update_data = project_schema.load(request.get_json())
 
-    return {'message': CREATED_SUCCESSFULLY, 'created': project_schema.dumps(project)}, 201
+        ProjectModel.update_by_id(update_data, project_id)
+        project = ProjectModel.find_by_id(project_id)
 
+        return {'message': UPDATED_SUCCESSFULLY, 'updated': project_schema.dumps(project)}, 200
 
-@blueprint.route(f'{PROJECTS_PATH}/<int:project_id>', methods=['PATCH'])
-def update_project(project_id):
-    if not project_id:
-        return {'message': 'Project id must be supplied in url '}, 400
+    def delete(self, project_id):
+        project = ProjectModel.find_by_id(project_id)
 
-    if not Project.find_by_id(project_id):
+        if project:
+            project.delete_from_db()
+            return {'message': PROJECT_DELETED}, 200
+
         return {'message': PROJECT_NOT_FOUND}, 404
 
-    update_data = project_schema.load(request.get_json())
 
-    Project.update_by_id(update_data, project_id)
-    project = Project.find_by_id(project_id)
-
-    return {'message': UPDATED_SUCCESSFULLY, 'updated': project_schema.dumps(project)}, 200
-
-
-@blueprint.route(f'{PROJECTS_PATH}/<int:project_id>', methods=['DELETE'])
-def delete_project(project_id):
-    project = Project.find_by_id(project_id)
-
-    if project:
-        project.delete_from_db()
-        return {'message': PROJECT_DELETED}, 200
-
-    return {'message': PROJECT_NOT_FOUND}, 404
 
 
 

@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from marshmallow import ValidationError
-from project.projects import views
+from project.projects.views import ProjectList, Project
 from project.db import db
 from project.ping import ping_blueprint
 
@@ -17,7 +17,8 @@ def create_app(script_info=None):
 
     # register blueprints
     app.register_blueprint(ping_blueprint)
-    app.register_blueprint(views.blueprint)
+    app.add_url_rule('/projects', view_func=ProjectList.as_view('project_list'))
+    app.add_url_rule('/projects/<int:project_id>', view_func=Project.as_view('project'))
 
     # register error handling
     @app.errorhandler(ValidationError)

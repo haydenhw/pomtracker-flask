@@ -2,11 +2,11 @@ import json
 import pytest
 from project.projects.views import \
     PROJECTS_PATH, CREATED_SUCCESSFULLY, UPDATED_SUCCESSFULLY, PROJECT_ALREADY_EXISTS, PROJECT_NOT_FOUND
-from project.projects.models import Project
+from project.projects.models import ProjectModel
 
 @pytest.fixture(autouse=True)
 def clear_db(test_app, test_db):
-    test_db.session.query(Project).delete()
+    test_db.session.query(ProjectModel).delete()
 
 # Test POST endpoint
 def test_create_project(test_app):
@@ -25,8 +25,8 @@ def test_create_project(test_app):
 
 def test_create_project_already_exists(test_app):
     test_project = dict(project_name='Learn Django')
-    project = Project(**test_project)
-    Project.save_to_db(project)
+    project = ProjectModel(**test_project)
+    ProjectModel.save_to_db(project)
 
     client = test_app.test_client()
     resp = client.post(
@@ -54,8 +54,8 @@ def test_create_project_invalid_json_payload(test_app):
 
 # Test GET endpoint
 def test_list_projects(test_app, test_db):
-    test_project1 = Project(project_name='Learn Django')
-    test_project2 = Project(project_name='Learn Go')
+    test_project1 = ProjectModel(project_name='Learn Django')
+    test_project2 = ProjectModel(project_name='Learn Go')
     test_db.session.add_all([test_project1, test_project2])
     test_db.session.commit()
 
@@ -69,7 +69,7 @@ def test_list_projects(test_app, test_db):
 
 # Test PATCH Endpoint
 def test_update_project(test_app):
-    project = Project(project_name='test project')
+    project = ProjectModel(project_name='test project')
     project.save_to_db()
 
     updates = dict(project_name='updated name')
@@ -90,7 +90,7 @@ def test_update_project(test_app):
 
 
 def test_update_project_invalid_json_payload(test_app):
-    project = Project(project_name='test project')
+    project = ProjectModel(project_name='test project')
     project.save_to_db()
 
     updates = dict(project_name=None)
@@ -121,7 +121,7 @@ def test_update_project_not_found(test_app):
 
 
 def test_delete_project(test_app):
-    project = Project(project_name='test project')
+    project = ProjectModel(project_name='test project')
     project.save_to_db()
 
     client = test_app.test_client()
@@ -140,7 +140,7 @@ def test_delete_project(test_app):
 
 def test_delete_project_not_found(test_app):
     test_project = dict(project_name='test project')
-    project = Project(**test_project)
+    project = ProjectModel(**test_project)
     project.save_to_db()
 
     client = test_app.test_client()

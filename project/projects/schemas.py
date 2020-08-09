@@ -8,5 +8,5 @@ class ProjectSchema(Schema):
 
 
 project_schema = ProjectSchema()
-projects_schema = ProjectSchema(many=True)
+project_list_schema = ProjectSchema(many=True)
 

@@ -24,6 +24,12 @@ class ProjectModel(db.Model):
         return cls.query.filter_by(id=id_).first()
 
     @classmethod
+    def create_from_dict(cls, project_data):
+        project = cls(**project_data)
+        db.session.add(project)
+        db.session.commit()
+
+    @classmethod
     def update_by_id(cls, updates, id_):
         cls.query.filter_by(id=id_).update(updates)
         db.session.commit()

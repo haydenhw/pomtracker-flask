@@ -1,0 +1,15 @@
+{
+  "project_name_exists": "A project with name '{}' already exists.",
+  "project_error_inserting": "An error occurred while inserting the project.",
+  "project_not_found": "No project found with <id={}>.",
+  "project_deleted": "Project deleted.",
+  "project_created": "Project created successfully.",
+  "project_updated": "Project updated successfully.",
+
+  "user_username_exists": "A user with that username already exists.",
+  "user_not_found": "User not found.",
+  "user_deleted": "User deleted.",
+  "user_invalid_credentials": "Invalid credentials!",
+  "user_logged_out": "User <id={}> successfully logged out.",
+  "user_registered": "Account created successfully."
+}

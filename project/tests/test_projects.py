@@ -12,11 +12,11 @@ def clear_db(test_app, test_db):
 
 # Test POST endpoint
 def test_create_project(test_app):
-    test_project = dict(project_name='Learn Django')
+    project_data = dict(project_name='Learn Django', user_id=1)
     client = test_app.test_client()
     resp = client.post(
         PROJECTS_PATH,
-        data=json.dumps(test_project),
+        data=json.dumps(project_data),
         content_type='application/json'
     )
     data = json.loads(resp.data.decode())
@@ -26,13 +26,13 @@ def test_create_project(test_app):
 
 
 def test_create_project_already_exists(test_app):
-    test_project = dict(project_name='Learn Django')
-    project = ProjectModel.create(**test_project)
+    project_data = dict(project_name='Learn Django', user_id=1)
+    project = ProjectModel.create(**project_data)
 
     client = test_app.test_client()
     resp = client.post(
         PROJECTS_PATH,
-        data=json.dumps(test_project),
+        data=json.dumps(project_data),
         content_type='application/json'
     )
     data = json.loads(resp.data.decode())
@@ -42,11 +42,11 @@ def test_create_project_already_exists(test_app):
 
 
 def test_create_project_invalid_json_payload(test_app):
-    test_project = dict(project_name=None)
+    project_data = dict(project_name=None)
     client = test_app.test_client()
     resp = client.post(
         PROJECTS_PATH,
-        data=json.dumps(test_project),
+        data=json.dumps(project_data),
         content_type='application/json'
     )
     data = json.loads(resp.data.decode())
@@ -55,9 +55,9 @@ def test_create_project_invalid_json_payload(test_app):
 
 # Test GET endpoint
 def test_list_projects(test_app, test_db):
-    test_project1 = ProjectModel(project_name='Learn Django')
-    test_project2 = ProjectModel(project_name='Learn Go')
-    test_db.session.add_all([test_project1, test_project2])
+    project1 = ProjectModel(project_name='Learn Django', user_id=1)
+    project2 = ProjectModel(project_name='Learn Go', user_id=1)
+    test_db.session.add_all([project1, project2])
     test_db.session.commit()
 
     client = test_app.test_client()
@@ -66,13 +66,13 @@ def test_list_projects(test_app, test_db):
 
     assert resp.status_code == 200
     assert len(data) == 2
-    assert data[0]['project_name'] == test_project1.project_name
+    assert data[1]['project_name'] == project2.project_name
 
 # Test PATCH Endpoint
 def test_update_project(test_app):
-    project = ProjectModel.create(project_name='test project')
+    project = ProjectModel.create(project_name='test project', user_id=1)
 
-    updates = dict(project_name='updated name')
+    updates = dict(project_name='updated name', user_id=1)
     client = test_app.test_client()
     resp = client.patch(
         f'{PROJECTS_PATH}/{project.id}',
@@ -90,7 +90,7 @@ def test_update_project(test_app):
 
 
 def test_update_project_invalid_json_payload(test_app):
-    project = ProjectModel(project_name='test project')
+    project = ProjectModel(project_name='test project', user_id=1)
     project.save_to_db()
 
     updates = dict(project_name=None)
@@ -107,7 +107,7 @@ def test_update_project_invalid_json_payload(test_app):
 
 
 def test_update_project_not_found(test_app):
-    updates = dict(project_name='updated name')
+    updates = dict(project_name='updated name', user_id=1)
     test_id = 99999
     client = test_app.test_client()
     resp = client.patch(
@@ -122,7 +122,7 @@ def test_update_project_not_found(test_app):
 
 # Test DELETE endpoint
 def test_delete_project(test_app):
-    project = ProjectModel.create(project_name='test project')
+    project = ProjectModel.create(project_name='test project', user_id=1)
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)
@@ -141,7 +141,7 @@ def test_delete_project(test_app):
     assert len(data) == 0
 
 def test_delete_project_not_found(test_app):
-    project = ProjectModel.create(project_name='test project')
+    project = ProjectModel.create(project_name='test project', user_id=1)
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)

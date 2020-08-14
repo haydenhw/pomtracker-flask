@@ -9,13 +9,13 @@ def clear_db(test_app, test_db):
 
 def test_project_create(test_app, test_db):
     test_project_name = 'test project'
-    project_data = dict(project_name=test_project_name)
+    project_data = dict(project_name=test_project_name, user_id=1)
     project =  ProjectModel.create(**project_data)
     result = ProjectModel.find_by_name(test_project_name)
     assert result.project_name == test_project_name == project.project_name
 
 def test_project_task_relationship(test_app, test_db):
-    project = ProjectModel(project_name='test project')
+    project = ProjectModel(project_name='test project', user_id=1)
     task1 = TaskModel(task_name='task1', project_id=project.id)
     task2 = TaskModel(task_name='task2', project_id=project.id)
     project.tasks = [task1, task2]

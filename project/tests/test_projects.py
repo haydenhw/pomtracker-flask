@@ -27,8 +27,7 @@ def test_create_project(test_app):
 
 def test_create_project_already_exists(test_app):
     test_project = dict(project_name='Learn Django')
-    project = ProjectModel(**test_project)
-    ProjectModel.save_to_db(project)
+    project = ProjectModel.create(**test_project)
 
     client = test_app.test_client()
     resp = client.post(
@@ -71,8 +70,7 @@ def test_list_projects(test_app, test_db):
 
 # Test PATCH Endpoint
 def test_update_project(test_app):
-    project = ProjectModel(project_name='test project')
-    project.save_to_db()
+    project = ProjectModel.create(project_name='test project')
 
     updates = dict(project_name='updated name')
     client = test_app.test_client()
@@ -124,8 +122,7 @@ def test_update_project_not_found(test_app):
 
 # Test DELETE endpoint
 def test_delete_project(test_app):
-    project = ProjectModel(project_name='test project')
-    project.save_to_db()
+    project = ProjectModel.create(project_name='test project')
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)
@@ -144,9 +141,7 @@ def test_delete_project(test_app):
     assert len(data) == 0
 
 def test_delete_project_not_found(test_app):
-    test_project = dict(project_name='test project')
-    project = ProjectModel(**test_project)
-    project.save_to_db()
+    project = ProjectModel.create(project_name='test project')
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)

@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields
-from project.db import db
+from project.extensions import db
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)

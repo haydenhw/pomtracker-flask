@@ -5,6 +5,13 @@
   "project_deleted": "Project deleted.",
   "project_created": "Project created successfully.",
   "project_updated": "Project updated successfully.",
+  
+  "task_name_exists": "A task with name '{}' already exists.",
+  "task_error_inserting": "An error occurred while inserting the task.",
+  "task_not_found": "No task found with <id={}>.",
+  "task_deleted": "Task deleted.",
+  "task_created": "Task created successfully.",
+  "task_updated": "Task updated successfully.",
 
   "user_username_exists": "A user with that username already exists.",
   "user_not_found": "User not found.",

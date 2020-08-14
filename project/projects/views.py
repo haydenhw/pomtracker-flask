@@ -4,7 +4,6 @@ from project.libs.strings import gettext
 from project.projects.models import ProjectModel
 from project.projects.schemas import project_schema, project_list_schema
 
-
 # Routes
 PROJECTS_PATH = '/projects'
 
@@ -20,7 +19,7 @@ class ProjectList(MethodView):
         if ProjectModel.find_by_name(project_name):
             return {'message': gettext('project_name_exists').format(project_name)}, 400
 
-        project = ProjectModel.create_from_dict(project_data)
+        project = ProjectModel.create(**project_data)
 
         return {'message': gettext('project_created'), 'created': project_schema.dumps(project)}, 201
 

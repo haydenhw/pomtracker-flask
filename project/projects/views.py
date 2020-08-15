@@ -32,7 +32,7 @@ class Project(MethodView):
         if not ProjectModel.find_by_id(project_id):
             return {'message': gettext('project_not_found').format(project_id)}, 404
 
-        update_data = project_schema.load(request.get_json())
+        update_data = project_schema.load(request.get_json(), partial=True)
 
         ProjectModel.update_by_id(update_data, project_id)
         project = ProjectModel.find_by_id(project_id)

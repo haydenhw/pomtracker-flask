@@ -2,12 +2,14 @@ import json
 import pytest
 from project.projects.views import PROJECTS_PATH
 from project.projects.models import ProjectModel
+from project.tasks.models import TaskModel
 
 with open('project/strings/en-gb.json') as f:
     cached_strings = json.load(f)
 
 @pytest.fixture(autouse=True)
 def clear_db(test_app, test_db):
+    test_db.session.query(TaskModel).delete()
     test_db.session.query(ProjectModel).delete()
 
 # Test POST endpoint
@@ -67,14 +69,14 @@ def test_list_projects(test_app, test_db, factory):
     assert resp.status_code == 200
     assert len(data) == 2
     assert data[1]['project_name'] == project2.project_name
-    assert len(data[1].tasks) == 2
+    assert len(data[0]['tasks']) == 2
 
 
 # Test PATCH Endpoint
 def test_update_project(test_app, test_db, factory):
     project = factory.add_project('test project')
 
-    updates = factory.fake_project_data('updated name')
+    updates = dict(project_name='updated name')
     client = test_app.test_client()
     resp = client.patch(
         f'{PROJECTS_PATH}/{project.id}',
@@ -123,7 +125,6 @@ def test_update_project_not_found(test_app, test_db, factory):
 # Test DELETE endpoint
 def test_delete_project(test_app, test_db, factory):
     project = factory.add_project('test project')
-
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)
     data = json.loads(resp_one.data.decode())
@@ -139,6 +140,7 @@ def test_delete_project(test_app, test_db, factory):
     data = json.loads(resp_three.data.decode())
     assert resp_three.status_code == 200
     assert len(data) == 0
+
 
 def test_delete_project_not_found(test_app, test_db, factory):
     project = factory.add_project('test project')

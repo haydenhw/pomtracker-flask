@@ -17,7 +17,7 @@ class Factory:
         )
 
     @staticmethod
-    def fake_project_data(project_name, user_id=1):
+    def fake_project_data(project_name, user_id='abc123'):
         return dict(project_name=project_name, user_id=user_id)
 
     @staticmethod

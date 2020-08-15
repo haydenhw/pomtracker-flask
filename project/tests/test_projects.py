@@ -55,8 +55,10 @@ def test_create_project_invalid_json_payload(test_app, test_db, factory):
 
 # Test GET endpoint
 def test_list_projects(test_app, test_db, factory):
-    project1 = factory.add_project('Project1')
-    project2 = factory.add_project('Project2')
+    project1 = factory.add_project('project1')
+    project2 = factory.add_project('project2')
+    task1 = factory.add_task('task1', project1.id)
+    task2 = factory.add_task('task2', project1.id)
 
     client = test_app.test_client()
     resp = client.get(PROJECTS_PATH)
@@ -65,6 +67,8 @@ def test_list_projects(test_app, test_db, factory):
     assert resp.status_code == 200
     assert len(data) == 2
     assert data[1]['project_name'] == project2.project_name
+    assert len(data[1].tasks) == 2
+
 
 # Test PATCH Endpoint
 def test_update_project(test_app, test_db, factory):

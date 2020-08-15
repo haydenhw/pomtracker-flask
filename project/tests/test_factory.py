@@ -15,7 +15,7 @@ def test_makes_fake_project_data():
     project_name = 'test project'
     result = Factory.fake_project_data(project_name)
     assert result['project_name'] == project_name
-    assert result['user_id'] == 1
+    assert result['user_id'] == 'abc123'
 
 def test_makes_fake_task_data():
     project = Factory.add_project('test project')
@@ -29,7 +29,7 @@ def test_add_project(test_app, test_db):
     Factory.add_project(project_name)
     result = ProjectModel.find_by_name(project_name)
     assert result.project_name == project_name
-    assert result.user_id == 1
+    assert result.user_id == 'abc123'
 
 
 

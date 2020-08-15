@@ -78,13 +78,109 @@ def test_create_task_with_null_project_id(test_app, test_db, factory):
 # Test GET endpoint
 def test_list_tasks(test_app, test_db, factory):
     project = factory.add_project('test project')
-    task1 = factory.add_task('task1')
-    task2 = factory.add_task('task2')
+    task1 = factory.add_task('task1', project.id)
+    task2 = factory.add_task('task2', project.id)
 
     client = test_app.test_client()
-    resp = client.get(TASKS_PATH)
+    resp = client.get('/tasks')
     data = json.loads(resp.data.decode())
 
     assert resp.status_code == 200
     assert len(data) == 2
     assert data[1]['task_name'] == task2.task_name
+
+
+def test_update_task(test_app, test_db, factory):
+    project = factory.add_project('test project')
+    task = factory.add_task('test task', project.id)
+
+    updates = dict(task_name='updated name')
+    client = test_app.test_client()
+    resp = client.patch(
+        f'tasks/{task.id}',
+        data=json.dumps(updates),
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    updated_task = json.loads(data['updated'])
+
+    assert resp.status_code == 200
+    assert data['message'] == cached_strings['task_updated']
+    assert updated_task['task_name'] == updates['task_name']
+    assert updated_task['id'] == task.id
+
+
+def test_update_task_invalid_json_payload(test_app, test_db, factory):
+    project = factory.add_project('test project')
+    task = factory.add_task('test task', project.id)
+
+    updates = dict(task_name=None)
+    client = test_app.test_client()
+    resp = client.patch(
+        f'tasks/{task.id}',
+        data=json.dumps(updates),
+        content_type='application/json'
+    )
+    data = json.loads(resp.data.decode())
+
+    assert resp.status_code == 400
+    assert data['task_name'][0] == 'Field may not be null.'
+
+
+def test_update_task_not_found(test_app, test_db, factory):
+    updates = dict(task_name='updated name')
+    test_id = 99999
+    client = test_app.test_client()
+    resp = client.patch(
+        f'tasks/{test_id}',
+        data=json.dumps(updates),
+        content_type='application/json'
+    )
+    data = json.loads(resp.data.decode())
+
+    assert resp.status_code == 404
+    assert data['message'] == cached_strings['task_not_found'].format(test_id)
+    
+# Test DELETE endpoint
+def test_delete_task(test_app, test_db, factory):
+    project = factory.add_project('test project')
+    task = factory.add_task('test task', project.id)
+
+    client = test_app.test_client()
+    resp_one = client.get('/tasks')
+    data = json.loads(resp_one.data.decode())
+    assert resp_one.status_code == 200
+    assert len(data) == 1
+
+    resp_two = client.delete(f"tasks/{task.id}")
+    data = json.loads(resp_two.data.decode())
+    assert resp_two.status_code == 200
+    assert data['message'] == cached_strings['task_deleted']
+
+    resp_three = client.get('/tasks')
+    data = json.loads(resp_three.data.decode())
+    assert resp_three.status_code == 200
+    assert len(data) == 0
+
+
+def test_delete_task_not_found(test_app, test_db, factory):
+    project = factory.add_project('test project')
+    task = factory.add_task('test task', project.id)
+
+    client = test_app.test_client()
+    resp_one = client.get('/tasks')
+    data = json.loads(resp_one.data.decode())
+    assert resp_one.status_code == 200
+    assert len(data) == 1
+
+    test_id = task.id + 999
+    resp_two = client.delete(f"tasks/{test_id}")
+    data = json.loads(resp_two.data.decode())
+    assert data['message'] == cached_strings['task_not_found'].format(test_id)
+    assert resp_two.status_code == 404
+
+
+
+
+

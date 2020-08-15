@@ -4,7 +4,7 @@ from project.tasks.models import TaskModel
 
 class Factory:
     @staticmethod
-    def add_project(project_name, user_id=1):
+    def add_project(project_name, user_id='abc123'):
         return ProjectModel.create(project_name=project_name, user_id=user_id)
 
     @staticmethod
@@ -13,7 +13,7 @@ class Factory:
             task_name=task_name,
             project_id=project_id,
             recorded_time=random.randrange(0, 10000),
-            user_id=1
+            user_id='abc123'
         )
 
     @staticmethod
@@ -26,5 +26,5 @@ class Factory:
             task_name=task_name,
             project_id=project_id,
             recorded_time=random.randrange(0, 10000),
-            user_id=1
+            user_id='abc123'
         )

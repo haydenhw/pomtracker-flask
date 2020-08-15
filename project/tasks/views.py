@@ -13,6 +13,7 @@ class TaskList(MethodView):
         if TaskModel.find_by_name(task_name):
             return {'message': gettext('task_name_exists').format(task_name)}, 400
         
-        TaskModel.create(**task_data)
-        return {'message': gettext('task_created')}, 201
+        task = TaskModel.create(**task_data)
+
+        return {'message': gettext('task_created'), 'created': task_schema.dump(task)}, 201
 

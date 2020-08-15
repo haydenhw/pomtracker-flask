@@ -11,8 +11,8 @@ def clear_db(test_app, test_db):
     test_db.session.query(ProjectModel).delete()
 
 # Test POST endpoint
-def test_create_project(test_app):
-    project_data = dict(project_name='Learn Django', user_id=1)
+def test_create_project(test_app, test_db, factory):
+    project_data = factory.fake_project_data('test project')
     client = test_app.test_client()
     resp = client.post(
         PROJECTS_PATH,
@@ -25,9 +25,9 @@ def test_create_project(test_app):
     assert cached_strings['project_created'] == data['message']
 
 
-def test_create_project_already_exists(test_app):
-    project_data = dict(project_name='Learn Django', user_id=1)
-    project = ProjectModel.create(**project_data)
+def test_create_project_already_exists(test_app, test_db, factory):
+    project_data = factory.fake_project_data('test project')
+    project = factory.add_project(**project_data)
 
     client = test_app.test_client()
     resp = client.post(
@@ -41,8 +41,8 @@ def test_create_project_already_exists(test_app):
     assert cached_strings['project_name_exists'].format(project.project_name) == data['message']
 
 
-def test_create_project_invalid_json_payload(test_app):
-    project_data = dict(project_name=None)
+def test_create_project_invalid_json_payload(test_app, test_db, factory):
+    project_data = factory.fake_project_data(None)
     client = test_app.test_client()
     resp = client.post(
         PROJECTS_PATH,
@@ -54,11 +54,9 @@ def test_create_project_invalid_json_payload(test_app):
     assert data['project_name'][0] == 'Field may not be null.'
 
 # Test GET endpoint
-def test_list_projects(test_app, test_db):
-    project1 = ProjectModel(project_name='Learn Django', user_id=1)
-    project2 = ProjectModel(project_name='Learn Go', user_id=1)
-    test_db.session.add_all([project1, project2])
-    test_db.session.commit()
+def test_list_projects(test_app, test_db, factory):
+    project1 = factory.add_project('Project1')
+    project2 = factory.add_project('Project2')
 
     client = test_app.test_client()
     resp = client.get(PROJECTS_PATH)
@@ -69,10 +67,10 @@ def test_list_projects(test_app, test_db):
     assert data[1]['project_name'] == project2.project_name
 
 # Test PATCH Endpoint
-def test_update_project(test_app):
-    project = ProjectModel.create(project_name='test project', user_id=1)
+def test_update_project(test_app, test_db, factory):
+    project = factory.add_project('test project')
 
-    updates = dict(project_name='updated name', user_id=1)
+    updates = factory.fake_project_data('updated name')
     client = test_app.test_client()
     resp = client.patch(
         f'{PROJECTS_PATH}/{project.id}',
@@ -89,11 +87,9 @@ def test_update_project(test_app):
     assert updated_project['id'] == project.id
 
 
-def test_update_project_invalid_json_payload(test_app):
-    project = ProjectModel(project_name='test project', user_id=1)
-    project.save_to_db()
-
-    updates = dict(project_name=None)
+def test_update_project_invalid_json_payload(test_app, test_db, factory):
+    project = factory.add_project('test project')
+    updates = factory.fake_project_data(project_name=None)
     client = test_app.test_client()
     resp = client.patch(
         f'{PROJECTS_PATH}/{project.id}',
@@ -106,8 +102,8 @@ def test_update_project_invalid_json_payload(test_app):
     assert data['project_name'][0] == 'Field may not be null.'
 
 
-def test_update_project_not_found(test_app):
-    updates = dict(project_name='updated name', user_id=1)
+def test_update_project_not_found(test_app, test_db, factory):
+    updates = factory.fake_project_data('updated name')
     test_id = 99999
     client = test_app.test_client()
     resp = client.patch(
@@ -121,8 +117,8 @@ def test_update_project_not_found(test_app):
     assert data['message'] == cached_strings['project_not_found'].format(test_id)
 
 # Test DELETE endpoint
-def test_delete_project(test_app):
-    project = ProjectModel.create(project_name='test project', user_id=1)
+def test_delete_project(test_app, test_db, factory):
+    project = factory.add_project('test project')
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)
@@ -140,8 +136,8 @@ def test_delete_project(test_app):
     assert resp_three.status_code == 200
     assert len(data) == 0
 
-def test_delete_project_not_found(test_app):
-    project = ProjectModel.create(project_name='test project', user_id=1)
+def test_delete_project_not_found(test_app, test_db, factory):
+    project = factory.add_project('test project')
 
     client = test_app.test_client()
     resp_one = client.get(PROJECTS_PATH)

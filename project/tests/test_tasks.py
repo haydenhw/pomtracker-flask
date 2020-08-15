@@ -12,7 +12,7 @@ def clear_db(test_app, test_db):
 
 
 def test_create_task(test_app, test_db):
-    test_project = ProjectModel.create(project_name='project task')
+    test_project = ProjectModel.create(project_name='project task', user_id=1)
     # TODO decide on calling this task_data or test_task_data
     test_task_data = dict(task_name='test task', project_id=test_project.id)
     client = test_app.test_client()
@@ -29,7 +29,7 @@ def test_create_task(test_app, test_db):
     assert task.task_name == test_task_data['task_name']
 
 def test_create_task_already_exists(test_app):
-    test_project = ProjectModel.create(project_name='test project')
+    test_project = ProjectModel.create(project_name='test project', user_id=1)
     test_task_data = dict(task_name='Learn Django', project_id=test_project.id)
     task = TaskModel.create(**test_task_data)
 

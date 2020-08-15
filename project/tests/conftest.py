@@ -1,6 +1,6 @@
 import pytest
-
 from project import create_app, db
+from project.tests.factory import Factory
 
 
 @pytest.fixture(scope="module")
@@ -18,3 +18,7 @@ def test_db():
     db.session.remove()
     db.drop_all()
 
+
+@pytest.fixture(scope="module")
+def factory():
+    return Factory

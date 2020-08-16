@@ -6,7 +6,8 @@ class TaskSchema(Schema):
     task_name = fields.Str(required=True)
     recorded_time = fields.Int(required=True)
     project_id = fields.Int(required=True)
-    user_id = fields.Str(required=True)
+    client_id = fields.Str()
+    date_created = fields.Str(dump_only=True)
 
 
 task_schema = TaskSchema()

@@ -8,6 +8,10 @@ class CrudMixin:
         return cls.query.filter_by(id=id_).first()
 
     @classmethod
+    def find_by_user_id(cls, user_id):
+        return cls.query.filter_by(user_id=user_id).all()
+
+    @classmethod
     def find_by_name(cls, name):
         arg_dict = {}
         arg_dict[cls.name_key] = name

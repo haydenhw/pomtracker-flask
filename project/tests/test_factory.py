@@ -31,6 +31,13 @@ def test_add_project(test_app, test_db):
     assert result.project_name == project_name
     assert result.user_id == 'abc123'
 
+def test_add_project_with_user_id(test_app, test_db):
+    user_id = 'xyz456'
+    project_name = 'test project'
+    project = Factory.add_project(project_name=project_name, user_id=user_id)
+    result = ProjectModel.find_by_id(project.id)
+    assert result.project_name == project_name
+    assert result.user_id == user_id
 
 
 

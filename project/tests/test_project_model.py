@@ -7,6 +7,15 @@ def clear_db(test_app, test_db):
     test_db.session.query(TaskModel).delete()
     test_db.session.query(ProjectModel).delete()
 
+def test_find_by_user_id(test_app, test_db, factory):
+    user_id1 = 'xyz456'
+    user_id2 = 'abc123'
+    factory.add_project('project1a', user_id=user_id1)
+    factory.add_project('project1b', user_id=user_id1)
+    factory.add_project('project2', user_id=user_id2)
+    results = ProjectModel.find_by_user_id(user_id1)
+    assert len(results) == 2
+
 def test_project_create(test_app, test_db, factory):
     test_project_name = 'test project'
     project = factory.add_project(test_project_name)

@@ -4,12 +4,14 @@ from project.libs.strings import gettext
 from project.projects.models import ProjectModel
 from project.projects.schemas import project_schema, project_list_schema
 
-# Routes
-PROJECTS_PATH = '/projects'
 
 class ProjectList(MethodView):
     def get(self):
-        projects = ProjectModel.query.all()
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return {'message': gettext('project_user_id_required')}, 400
+
+        projects = ProjectModel.find_by_user_id(user_id)
         return project_list_schema.dumps(projects), 200
 
     def post(self):
@@ -26,9 +28,6 @@ class ProjectList(MethodView):
 
 class Project(MethodView):
     def patch(self, project_id):
-        if not project_id:
-            return {'message': 'Project id must be supplied in url '}, 400
-
         if not ProjectModel.find_by_id(project_id):
             return {'message': gettext('project_not_found').format(project_id)}, 404
 

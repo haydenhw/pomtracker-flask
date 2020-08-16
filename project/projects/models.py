@@ -8,7 +8,7 @@ class ProjectModel(db.Model, CrudMixin):
     project_name = db.Column(db.String(80), nullable=False)
     client_id = db.Column(db.String(80))
     user_id = db.Column(db.String(80), nullable=False)
-    time_created = db.Column(db.DateTime, default=datetime.now)
+    date_created = db.Column(db.DateTime, default=datetime.now)
     tasks = db.relationship('TaskModel', backref='project', lazy='dynamic', cascade="all, delete, delete-orphan")
     name_key = 'project_name'
 

@@ -2,6 +2,7 @@
   "project_name_exists": "A project with name '{}' already exists.",
   "project_error_inserting": "An error occurred while inserting the project.",
   "project_not_found": "No project found with <id={}>.",
+  "project_user_id_required": "A user id associated with the requested projects must be supplied as a query parameter",
   "project_deleted": "Project deleted.",
   "project_created": "Project created successfully.",
   "project_updated": "Project updated successfully.",

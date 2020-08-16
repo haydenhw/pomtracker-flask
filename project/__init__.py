@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from marshmallow import ValidationError
 from project.projects.views import ProjectList, Project
 from project.tasks.views import TaskList, Task
@@ -9,6 +10,7 @@ def create_app(script_info=None):
 
     # instantiate the app
     app = Flask(__name__)
+    CORS(app)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:postgres@db:5432"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

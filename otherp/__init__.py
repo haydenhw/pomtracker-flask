@@ -9,14 +9,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 
-@app.route('/projects/<int:project_id>')
+@app.route('/api/projects/<int:project_id>')
 def project_item(project_id):
     project = ProjectModel.query.filter_by(id=project_id).first()
     result = project_schema.dump(project)
     return result
 
 
-@app.route('/projects', methods=['POST'])
+@app.route('/api/projects', methods=['POST'])
 def post_project():
     try:
         project_data = project_schema.load(request.get_json())

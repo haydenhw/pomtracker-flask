@@ -16,7 +16,7 @@ def test_create_project(test_app, test_db, factory):
     project_data = factory.fake_project_data('test project')
     client = test_app.test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(project_data),
         content_type='application/json'
     )
@@ -32,7 +32,7 @@ def test_create_project_already_exists(test_app, test_db, factory):
 
     client = test_app.test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(project_data),
         content_type='application/json'
     )
@@ -46,7 +46,7 @@ def test_create_project_invalid_json_payload(test_app, test_db, factory):
     project_data = factory.fake_project_data(None)
     client = test_app.test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(project_data),
         content_type='application/json'
     )
@@ -62,7 +62,7 @@ def test_list_projects(test_app, test_db, factory):
     factory.add_task('task2', project1.id)
 
     client = test_app.test_client()
-    resp = client.get(f'/projects?user_id=abc123')
+    resp = client.get(f'/api/projects?user_id=abc123')
     data = json.loads(resp.data.decode())
 
     assert resp.status_code == 200
@@ -76,7 +76,7 @@ def test_list_projects_by_user_id(test_app, test_db, factory):
     factory.add_project('project1', user_id=user_id1)
     factory.add_project('project2', user_id=user_id2)
     client = test_app.test_client()
-    resp = client.get(f'/projects?user_id={user_id1}')
+    resp = client.get(f'/api/projects?user_id={user_id1}')
     data = json.loads(resp.data.decode())
 
     assert len(data) == 1
@@ -84,7 +84,7 @@ def test_list_projects_by_user_id(test_app, test_db, factory):
 
 def test_list_projects_no_user_id_supplied(test_app, test_db, factory):
     client = test_app.test_client()
-    resp = client.get('/projects')
+    resp = client.get('/api/projects')
     data = json.loads(resp.data.decode())
     assert resp.status_code == 400
     assert data['message'] == cached_strings['project_user_id_required']
@@ -96,7 +96,7 @@ def test_update_project(test_app, test_db, factory):
     updates = dict(project_name='updated name')
     client = test_app.test_client()
     resp = client.patch(
-        f'/projects/{project.id}',
+        f'/api/projects/{project.id}',
         data=json.dumps(updates),
         content_type='application/json'
     )
@@ -115,7 +115,7 @@ def test_update_project_invalid_json_payload(test_app, test_db, factory):
     updates = factory.fake_project_data(project_name=None)
     client = test_app.test_client()
     resp = client.patch(
-        f'/projects/{project.id}',
+        f'/api/projects/{project.id}',
         data=json.dumps(updates),
         content_type='application/json'
     )
@@ -130,7 +130,7 @@ def test_update_project_not_found(test_app, test_db, factory):
     test_id = 99999
     client = test_app.test_client()
     resp = client.patch(
-        f'/projects/{test_id}',
+        f'/api/projects/{test_id}',
         data=json.dumps(updates),
         content_type='application/json'
     )
@@ -143,17 +143,17 @@ def test_update_project_not_found(test_app, test_db, factory):
 def test_delete_project(test_app, test_db, factory):
     project = factory.add_project('test project')
     client = test_app.test_client()
-    resp_one = client.get(f'/projects?user_id=abc123')
+    resp_one = client.get(f'/api/projects?user_id=abc123')
     data = json.loads(resp_one.data.decode())
     assert resp_one.status_code == 200
     assert len(data) == 1
 
-    resp_two = client.delete(f"/projects/{project.id}")
+    resp_two = client.delete(f"/api/projects/{project.id}")
     data = json.loads(resp_two.data.decode())
     assert resp_two.status_code == 200
     assert data['message'] == cached_strings['project_deleted']
 
-    resp_three = client.get(f'/projects?user_id=abc123')
+    resp_three = client.get(f'/api/projects?user_id=abc123')
     data = json.loads(resp_three.data.decode())
     assert resp_three.status_code == 200
     assert len(data) == 0
@@ -163,13 +163,13 @@ def test_delete_project_not_found(test_app, test_db, factory):
     project = factory.add_project('test project')
 
     client = test_app.test_client()
-    resp_one = client.get(f'/projects?user_id=abc123')
+    resp_one = client.get(f'/api/projects?user_id=abc123')
     data = json.loads(resp_one.data.decode())
     assert resp_one.status_code == 200
     assert len(data) == 1
 
     test_id = project.id + 999
-    resp_two = client.delete(f"/projects/{test_id}")
+    resp_two = client.delete(f"/api/projects/{test_id}")
     data = json.loads(resp_two.data.decode())
     assert data['message'] == cached_strings['project_not_found'].format(test_id)
     assert resp_two.status_code == 404

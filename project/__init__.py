@@ -20,10 +20,10 @@ def create_app(script_info=None):
 
     # register blueprints
     app.register_blueprint(ping_blueprint)
-    app.add_url_rule('/projects', view_func=ProjectList.as_view('project_list'))
-    app.add_url_rule('/projects/<int:project_id>', view_func=Project.as_view('project'))
-    app.add_url_rule('/tasks', view_func=TaskList.as_view('task_list'))
-    app.add_url_rule('/tasks/<int:task_id>', view_func=Task.as_view('task'))
+    app.add_url_rule('/api/projects', view_func=ProjectList.as_view('project_list'))
+    app.add_url_rule('/api/projects/<int:project_id>', view_func=Project.as_view('project'))
+    app.add_url_rule('/api/tasks', view_func=TaskList.as_view('task_list'))
+    app.add_url_rule('/api/tasks/<int:task_id>', view_func=Task.as_view('task'))
 
     # register error handling
     @app.errorhandler(ValidationError)

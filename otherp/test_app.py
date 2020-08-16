@@ -20,7 +20,7 @@ def test_create_project(ctx):
     test_project = dict(text='Lean Django')
     client = ctx['test_app'].test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(test_project),
         content_type='application/json'
     )
@@ -40,7 +40,7 @@ def test_create_project_invalid_text_value(ctx):
     test_project = dict(text=123)
     client = ctx['test_app'].test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(test_project),
         content_type='application/json'
     )
@@ -58,7 +58,7 @@ def test_create_project_already_exists(ctx):
     test_project = dict(text=project.text)
     client = ctx['test_app'].test_client()
     resp = client.post(
-        '/projects',
+        '/api/projects',
         data=json.dumps(test_project),
         content_type='application/json'
     )
@@ -77,7 +77,7 @@ def test_route(ctx):
     assert res.id == 1
 
     client = ctx['test_app'].test_client()
-    resp = client.get('/projects/1')
+    resp = client.get('/api/projects/1')
     data = json.loads(resp.data.decode())
     assert data['text'] == 'test_proj'
 

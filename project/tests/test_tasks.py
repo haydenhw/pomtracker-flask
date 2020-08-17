@@ -97,7 +97,7 @@ def test_update_task(test_app, test_db, factory):
     updates = dict(task_name='updated name')
     client = test_app.test_client()
     resp = client.patch(
-        f'api/tasks{task.id}',
+        f'api/tasks/{task.id}',
         data=json.dumps(updates),
         content_type='application/json'
     )
@@ -118,7 +118,7 @@ def test_update_task_invalid_json_payload(test_app, test_db, factory):
     updates = dict(task_name=None)
     client = test_app.test_client()
     resp = client.patch(
-        f'api/tasks{task.id}',
+        f'api/tasks/{task.id}',
         data=json.dumps(updates),
         content_type='application/json'
     )
@@ -133,7 +133,7 @@ def test_update_task_not_found(test_app, test_db, factory):
     test_id = 99999
     client = test_app.test_client()
     resp = client.patch(
-        f'api/tasks{test_id}',
+        f'api/tasks/{test_id}',
         data=json.dumps(updates),
         content_type='application/json'
     )

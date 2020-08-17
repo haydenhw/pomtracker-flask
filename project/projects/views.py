@@ -7,7 +7,7 @@ from project.projects.schemas import project_schema, project_list_schema
 
 class ProjectList(MethodView):
     def get(self):
-        user_id = request.args.get('user_id')
+        user_id = request.args.get('userid')
         if not user_id:
             return {'message': gettext('project_user_id_required')}, 400
 

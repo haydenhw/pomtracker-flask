@@ -62,7 +62,7 @@ def test_list_projects(test_app, test_db, factory):
     factory.add_task('task2', project1.id)
 
     client = test_app.test_client()
-    resp = client.get(f'/api/projects?user_id=abc123')
+    resp = client.get(f'/api/projects?userid=abc123')
     data = json.loads(resp.data.decode())
 
     assert resp.status_code == 200
@@ -76,7 +76,7 @@ def test_list_projects_by_user_id(test_app, test_db, factory):
     factory.add_project('project1', user_id=user_id1)
     factory.add_project('project2', user_id=user_id2)
     client = test_app.test_client()
-    resp = client.get(f'/api/projects?user_id={user_id1}')
+    resp = client.get(f'/api/projects?userid={user_id1}')
     data = json.loads(resp.data.decode())
 
     assert len(data) == 1
@@ -143,7 +143,7 @@ def test_update_project_not_found(test_app, test_db, factory):
 def test_delete_project(test_app, test_db, factory):
     project = factory.add_project('test project')
     client = test_app.test_client()
-    resp_one = client.get(f'/api/projects?user_id=abc123')
+    resp_one = client.get(f'/api/projects?userid=abc123')
     data = json.loads(resp_one.data.decode())
     assert resp_one.status_code == 200
     assert len(data) == 1
@@ -153,7 +153,7 @@ def test_delete_project(test_app, test_db, factory):
     assert resp_two.status_code == 200
     assert data['message'] == cached_strings['project_deleted']
 
-    resp_three = client.get(f'/api/projects?user_id=abc123')
+    resp_three = client.get(f'/api/projects?userid=abc123')
     data = json.loads(resp_three.data.decode())
     assert resp_three.status_code == 200
     assert len(data) == 0
@@ -163,7 +163,7 @@ def test_delete_project_not_found(test_app, test_db, factory):
     project = factory.add_project('test project')
 
     client = test_app.test_client()
-    resp_one = client.get(f'/api/projects?user_id=abc123')
+    resp_one = client.get(f'/api/projects?userid=abc123')
     data = json.loads(resp_one.data.decode())
     assert resp_one.status_code == 200
     assert len(data) == 1

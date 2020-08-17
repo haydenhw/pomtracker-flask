@@ -1,13 +1,17 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, EXCLUDE
 
 
 class TaskSchema(Schema):
-    id = fields.Int(dump_only=True)
+    class Meta:
+        unknown = EXCLUDE
+        dump_only = ("id", "date_created")
+
+    id = fields.Int()
     task_name = fields.Str(required=True)
     recorded_time = fields.Int(required=True)
     project_id = fields.Int(required=True)
     client_id = fields.Str()
-    date_created = fields.Str(dump_only=True)
+    date_created = fields.Str()
 
 
 task_schema = TaskSchema()

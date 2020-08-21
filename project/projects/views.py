@@ -2,6 +2,7 @@ from flask import request
 from flask.views import MethodView
 from project.libs.strings import gettext
 from project.projects.models import ProjectModel
+from project.tasks.models import TaskModel
 from project.projects.schemas import project_schema, project_list_schema
 
 

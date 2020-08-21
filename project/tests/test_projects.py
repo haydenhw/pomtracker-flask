@@ -25,6 +25,24 @@ def test_create_project(test_app, test_db, factory):
     assert resp.status_code == 201
     assert cached_strings['project_created'] == data['message']
 
+def test_create_project_with_tasks(test_app, test_db, factory):
+    project_name = 'project with tasks'
+    project_data = factory.fake_project_data(project_name)
+    task1_data = dict(task_name='task1', recorded_time=100)
+    task2_data = dict(task_name='task2', recorded_time=200)
+    project_data['tasks'] = [task1_data, task2_data]
+
+    client = test_app.test_client()
+    resp = client.post(
+        '/api/projects',
+        data=json.dumps(project_data),
+        content_type='application/json'
+    )
+    data = json.loads(resp.data.decode())
+
+    tasks = ProjectModel.find_by_name(project_name).tasks.all()
+    assert resp.status_code == 201
+    assert len(tasks) == 2
 
 def test_create_project_already_exists(test_app, test_db, factory):
     project_data = factory.fake_project_data('test project')

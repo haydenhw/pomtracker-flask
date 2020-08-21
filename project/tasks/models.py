@@ -12,7 +12,12 @@ class TaskModel(db.Model, CrudMixin,):
     date_created = db.Column(db.DateTime, default=datetime.now)
     name_key = 'task_name'
 
-
+    @classmethod
+    def create_from_list(cls, tasks_data, project_id):
+        tasks = [cls(**t, project_id=project_id) for t in tasks_data]
+        db.session.add_all(tasks)
+        db.session.commit()
+        return tasks
 
 
 

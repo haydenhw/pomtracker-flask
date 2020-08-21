@@ -1,5 +1,6 @@
 from datetime import datetime
 from project.extensions import db, CrudMixin
+from project.tasks.models import TaskModel
 
 class ProjectModel(db.Model, CrudMixin):
     __tablename__ = "projects"
@@ -11,6 +12,50 @@ class ProjectModel(db.Model, CrudMixin):
     date_created = db.Column(db.DateTime, default=datetime.now)
     tasks = db.relationship('TaskModel', backref='project', lazy='dynamic', cascade="all, delete, delete-orphan")
     name_key = 'project_name'
+
+    @classmethod
+    def save(cls, **kwargs):
+        project = cls(**kwargs)
+        db.session.add(project)
+        db.session.commit()
+        return project
+
+    @classmethod
+    def save_with_tasks(cls, **kwargs):
+        project_data = kwargs
+        tasks_data = project_data['tasks']
+        project_data['tasks'] = []
+
+        project = cls.save(**project_data)
+        TaskModel.create_from_list(tasks_data, project.id)
+        return project
+
+    @classmethod
+    def create(cls, **kwargs):
+        project_data = kwargs
+        if 'tasks' in project_data:
+            return cls.save_with_tasks(**kwargs)
+
+        return cls.save(**kwargs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

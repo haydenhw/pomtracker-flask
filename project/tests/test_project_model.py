@@ -22,6 +22,15 @@ def test_project_create(test_app, test_db, factory):
     result = ProjectModel.find_by_name(test_project_name)
     assert result.project_name == test_project_name == project.project_name
 
+def test_project_create_with_tasks(test_app, test_db, factory):
+    project_name = 'project with tasks'
+    project_data = factory.fake_project_data(project_name)
+    task1_data = dict(task_name='task1', recorded_time=100)
+    task2_data = dict(task_name='task2', recorded_time=200)
+    project_data['tasks'] = [task1_data, task2_data]
+    project = ProjectModel.create(**project_data)
+    assert len(project.tasks.all()) == 2
+
 def test_project_task_relationship(test_app, test_db, factory):
     project = factory.add_project('test project')
     factory.add_task('task1', project.id)

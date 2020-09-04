@@ -23,7 +23,7 @@ def test_create_project(test_app, test_db, factory):
     data = json.loads(resp.data.decode())
 
     assert resp.status_code == 201
-    assert cached_strings['project_created'] == data['message']
+    assert data['project_name'] == 'test project'
 
 def test_create_project_with_tasks(test_app, test_db, factory):
     project_name = 'project with tasks'
@@ -120,12 +120,10 @@ def test_update_project(test_app, test_db, factory):
     )
 
     data = json.loads(resp.data.decode())
-    updated_project = json.loads(data['updated'])
 
     assert resp.status_code == 200
-    assert data['message'] == cached_strings['project_updated']
-    assert updated_project['project_name'] == updates['project_name']
-    assert updated_project['id'] == project.id
+    assert data['project_name'] == updates['project_name']
+    assert data['id'] == project.id
 
 
 def test_update_project_invalid_json_payload(test_app, test_db, factory):
@@ -169,7 +167,7 @@ def test_delete_project(test_app, test_db, factory):
     resp_two = client.delete(f"/api/projects/{project.id}")
     data = json.loads(resp_two.data.decode())
     assert resp_two.status_code == 200
-    assert data['message'] == cached_strings['project_deleted']
+    assert data['id'] == project.id
 
     resp_three = client.get(f'/api/projects?userid=abc123')
     data = json.loads(resp_three.data.decode())

@@ -15,7 +15,7 @@ class TaskList(MethodView):
         
         task = TaskModel.create(**task_data)
 
-        return {'message': gettext('task_created'), 'created': task_schema.dump(task)}, 201
+        return task_schema.dump(task), 201
 
     def get(self):
         tasks = TaskModel.query.all()
@@ -31,14 +31,14 @@ class Task(MethodView):
         TaskModel.update_by_id(update_data, task_id)
         task = TaskModel.find_by_id(task_id)
 
-        return {'message': gettext('task_updated'), 'updated': task_schema.dumps(task)}, 200
+        return task_schema.dumps(task), 200
 
     def delete(self, task_id):
         task = TaskModel.find_by_id(task_id)
 
         if task:
             task.delete_from_db()
-            return {'message': gettext('task_deleted')}, 200
+            return task_schema.dumps(task), 200
 
         return {'message': gettext('task_not_found').format(task_id)}, 404
 

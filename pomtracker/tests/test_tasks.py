@@ -26,8 +26,7 @@ def test_create_task(test_app, test_db, factory):
     task = TaskModel.find_by_name(task_data['task_name'])
 
     assert resp.status_code == 201
-    assert data['message'] == cached_strings['task_created']
-    assert data['created']['task_name'] == task_name
+    assert data['task_name'] == task_name
     assert task.task_name == task_name
 
 def test_create_task_already_exists(test_app, test_db, factory):
@@ -103,12 +102,10 @@ def test_update_task(test_app, test_db, factory):
     )
 
     data = json.loads(resp.data.decode())
-    updated_task = json.loads(data['updated'])
 
     assert resp.status_code == 200
-    assert data['message'] == cached_strings['task_updated']
-    assert updated_task['task_name'] == updates['task_name']
-    assert updated_task['id'] == task.id
+    assert data['task_name'] == updates['task_name']
+    assert data['id'] == task.id
 
 
 def test_update_task_invalid_json_payload(test_app, test_db, factory):
@@ -156,7 +153,7 @@ def test_delete_task(test_app, test_db, factory):
     resp_two = client.delete(f"api/tasks/{task.id}")
     data = json.loads(resp_two.data.decode())
     assert resp_two.status_code == 200
-    assert data['message'] == cached_strings['task_deleted']
+    assert data['id'] == task.id
 
     resp_three = client.get('/api/tasks')
     data = json.loads(resp_three.data.decode())

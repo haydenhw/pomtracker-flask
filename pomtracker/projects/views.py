@@ -24,7 +24,7 @@ class ProjectList(MethodView):
 
         project = ProjectModel.create(**project_data)
 
-        return {'message': gettext('project_created'), 'created': project_schema.dumps(project)}, 201
+        return project_schema.dumps(project), 201
 
 
 class Project(MethodView):
@@ -37,13 +37,13 @@ class Project(MethodView):
         ProjectModel.update_by_id(update_data, project_id)
         project = ProjectModel.find_by_id(project_id)
 
-        return {'message': gettext('project_updated'), 'updated': project_schema.dumps(project)}, 200
+        return project_schema.dumps(project), 200
 
     def delete(self, project_id):
         project = ProjectModel.find_by_id(project_id)
 
         if project:
             project.delete_from_db()
-            return {'message': gettext('project_deleted')}, 200
+            return project_schema.dumps(project), 200
 
         return {'message': gettext('project_not_found').format(project_id)}, 404

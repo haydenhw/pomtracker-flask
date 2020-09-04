@@ -1,4 +1,4 @@
-from project import create_app, db
+from pomtracker import create_app, db
 
 app = create_app()
 with app.app_context():

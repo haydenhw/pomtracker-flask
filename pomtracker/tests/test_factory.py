@@ -1,7 +1,7 @@
 import pytest
-from project.projects.models import ProjectModel
-from project.tasks.models import TaskModel
-from project.tests.factory import Factory
+from pomtracker.projects.models import ProjectModel
+from pomtracker.tasks.models import TaskModel
+from pomtracker.tests.factory import Factory
 
 def test_add_task(test_app, test_db):
     project = Factory.add_project('test project')

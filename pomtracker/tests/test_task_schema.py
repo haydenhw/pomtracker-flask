@@ -1,7 +1,7 @@
 import json
-from project.tasks.schemas import task_schema, task_list_schema
+from pomtracker.tasks.schemas import task_schema, task_list_schema
 
-with open('project/tests/post_project_request_body.json') as f:
+with open('pomtracker/tests/post_project_request_body.json') as f:
   project = json.load(f)
 
 def test_load_tasks():

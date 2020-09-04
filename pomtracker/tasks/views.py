@@ -1,9 +1,9 @@
 import json
 from flask import request
 from flask.views import MethodView
-from project.libs.strings import gettext
-from project.tasks.models import TaskModel
-from project.tasks.schemas import task_schema, task_list_schema
+from pomtracker.libs.strings import gettext
+from pomtracker.tasks.models import TaskModel
+from pomtracker.tasks.schemas import task_schema, task_list_schema
 
 class TaskList(MethodView):
     def post(self):

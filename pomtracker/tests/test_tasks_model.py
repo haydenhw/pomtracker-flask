@@ -1,5 +1,5 @@
 import pytest
-from project.tasks.models import TaskModel
+from pomtracker.tasks.models import TaskModel
 
 def test_create_tasks_from_list(test_app, test_db, factory):
     project = factory.add_project('test project')

@@ -1,6 +1,6 @@
 import random
-from project.projects.models import ProjectModel
-from project.tasks.models import TaskModel
+from pomtracker.projects.models import ProjectModel
+from pomtracker.tasks.models import TaskModel
 
 class Factory:
     @staticmethod

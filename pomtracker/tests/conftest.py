@@ -1,6 +1,6 @@
 import pytest
-from project import create_app, db
-from project.tests.factory import Factory
+from pomtracker import create_app, db
+from pomtracker.tests.factory import Factory
 
 
 @pytest.fixture(scope="module")

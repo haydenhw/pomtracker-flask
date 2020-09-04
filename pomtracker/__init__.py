@@ -1,10 +1,10 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from marshmallow import ValidationError
-from project.projects.views import ProjectList, Project
-from project.tasks.views import TaskList, Task
-from project.extensions import db
-from project.ping import ping_blueprint
+from pomtracker.projects.views import ProjectList, Project
+from pomtracker.tasks.views import TaskList, Task
+from pomtracker.extensions import db
+from pomtracker.ping import ping_blueprint
 
 def create_app(script_info=None):
 

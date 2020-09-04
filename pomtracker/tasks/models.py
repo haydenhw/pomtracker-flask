@@ -1,6 +1,6 @@
 from datetime import datetime
-from project.extensions import db
-from project.extensions import CrudMixin
+from pomtracker.extensions import db
+from pomtracker.extensions import CrudMixin
 
 class TaskModel(db.Model, CrudMixin,):
     __tablename__ = "tasks"

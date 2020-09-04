@@ -14,7 +14,7 @@ cached_strings = {}
 def refresh():
     print("Refreshing...")
     global cached_strings
-    with open(f"project/strings/{default_locale}.json") as f:
+    with open(f"pomtracker/strings/{default_locale}.json") as f:
         cached_strings = json.load(f)
 
 

@@ -1,9 +1,9 @@
 import pytest
 import json
-from project.projects.models import ProjectModel
-from project.tasks.models import TaskModel
+from pomtracker.projects.models import ProjectModel
+from pomtracker.tasks.models import TaskModel
 
-with open('project/strings/en-gb.json') as f:
+with open('pomtracker/strings/en-gb.json') as f:
     cached_strings = json.load(f)
 
 @pytest.fixture(autouse=True)

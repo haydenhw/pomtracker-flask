@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, EXCLUDE
-from project.tasks.schemas import TaskSchema
+from pomtracker.tasks.schemas import TaskSchema
 
 
 class ProjectSchema(Schema):

@@ -2,6 +2,8 @@ version: '3'
 services:
   db:
     image: postgres
+    volumes:
+      - ttf-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -18,3 +20,5 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+volumes:
+  ttf-data:

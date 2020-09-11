@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SRC=/Users/hayden/MEGA/sandbox/python/py-docker/
-DEST=/home/ubuntu/projects/py-docker/
+SRC=/Users/hayden/MEGA/projects/current/tomato-tracker-flask/tomato-tracker-flask/
+DEST=/home/ubuntu/projects/tomato-tracker-flask/
 SSH="ssh -i ~/.ssh/MyKeyPair.pem ubuntu@$EC2IP4"
 
 # create project folder and remove existing source files
@@ -12,4 +12,4 @@ rsync -av -progress -e "ssh -i ~/.ssh/MyKeyPair.pem" --exclude='/.git' --filter=
  ${SRC} ubuntu@$EC2IP4:${DEST}
 
 # cd into project dir
-$SSH "cd ${DEST} && docker-compose up --build"
+$SSH "cd ${DEST} && docker-compose up -d --build"

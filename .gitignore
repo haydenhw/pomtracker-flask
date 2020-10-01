@@ -1,5 +1,6 @@
 run-tests.sh
-.idea 
+.idea
+.env
 env/
 .pytest_cache 
 __pycache__/

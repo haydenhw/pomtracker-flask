@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 from marshmallow import ValidationError
@@ -12,7 +13,7 @@ def create_app(script_info=None):
     app = Flask(__name__)
     CORS(app)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:postgres@db:5432"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # set up extensions

@@ -1,24 +1,26 @@
-version: '3'
+version: '3.7'
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ['/usr/src/app/entrypoint.sh']
+    restart: always
+    ports:
+      - 5001:5000
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - DATABASE_URL=$DATABASE_URL
+    depends_on:
+      - db
   db:
     image: postgres
     volumes:
       - ttf-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-  web:
-    build: .
-    ports:
-      - "5001:5000"
-    volumes:
-      - .:/code
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    depends_on:
-      - db
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 volumes:
   ttf-data:

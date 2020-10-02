@@ -2,8 +2,11 @@ PomTracker
 =================
 ![App screenshot](public/images/pomtracker-screenshot.png)
 
-## Live App
-https://pomtracker.haydenhw.com/
+## Links
+* [Live Demo](https://pomtracker.haydenhw.com/)
+* [Client Repo](https://github.com/haydenhw/pomtracker-client)
+* [Server Repo ](https://github.com/haydenhw/pomtracker-flask)
+
 
 ## Summary
 A [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) timer with integrated time tracking. This app was built with my own use in mind as I
@@ -14,17 +17,19 @@ struggled to find an existing solution to manage my break schedules and track ti
 * Redux
 * Redux-Form
 * SCSS
-* Node
-* Express
+* Flask
+* Pytest
+* Marshmallow
+* SQLAlchemy
 * PostgreSQL
-* Knex
-* Mocha
-* Heroku
+* Docker
+* AWS (EC2, S3, CloudFront)
+
 
 API Docs
 =================
 
-## Get projects 
+## Get projects
 
 <strong>GET /api/projects</strong>
 
@@ -61,11 +66,11 @@ Successful response
 ]
 ```
 
-## Create project 
+## Create project
 <strong>POST /api/projects</strong>
 
 Example request body
-```json 
+```json
 {
     "project_name": "Learn Django",
     "user_id": "VhwVEJzJe",
@@ -74,27 +79,27 @@ Example request body
 }
 ```
 
-## Update project 
+## Update project
 <strong>PATCH /api/projects/:projectId</strong>
 
 Example request body
 ```json
-{ 
+{
     "task_name": "Read Docs",
     "recorded_time": 600
 }
 ```
-## Delete project 
+## Delete project
 <strong>DELETE /api/projects/:projectId</strong>
 
 Tasks
 =================
 
-## Create task 
+## Create task
 <strong>POST /api/tasks</strong>
 
 Example request body
-```json 
+```json
 {
    "task_name": "Build Todo App",
    "key": "Sanvq9Vpf",
@@ -106,15 +111,15 @@ Example request body
 }
 ```
 
-## Update task 
+## Update task
 <strong>PATCH /api/tasks/:taskId</strong>
 
 Example request body
 ```json
-{ 
+{
     "task_name": "Read Docs",
     "recorded_time": 600
 }
 ```
-## Delete task 
+## Delete task
 <strong>DELETE /api/tasks/:taskId</strong>

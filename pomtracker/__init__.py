@@ -7,19 +7,17 @@ from pomtracker.tasks.views import TaskList, Task
 from pomtracker.extensions import db
 from pomtracker.ping import ping_blueprint
 
-def create_app(script_info=None):
-
+def create_app():
     # instantiate the app
     app = Flask(__name__)
     CORS(app)
 
+    # configure SQLAlchemy
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    # set up extensions
     db.init_app(app)
 
-    # register blueprints
+    # register views
     app.register_blueprint(ping_blueprint)
     app.add_url_rule('/api/projects', view_func=ProjectList.as_view('project_list'))
     app.add_url_rule('/api/projects/<int:project_id>', view_func=Project.as_view('project'))

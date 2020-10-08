@@ -6,7 +6,7 @@ from pomtracker.tests.factory import Factory
 @pytest.fixture(scope="module")
 def test_app():
     app = create_app()
-    app.config['TESTING'] = True
+    app.config["TESTING"] = True
     with app.app_context():
         yield app
 

@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields
 from pomtracker.extensions import db
 
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
@@ -19,6 +20,7 @@ class Task(db.Model):
     def find_by_name(cls, name):
         return cls.query.filter_by(project_name=name).first()
 
+
 # make a model
 # seed an entity for the model
 # get the entity
@@ -27,6 +29,7 @@ class Task(db.Model):
 # make a marshmallow schema
 # task a sample partial update dict
 # validate it with a serializer
+
 
 class TaskSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -39,27 +42,18 @@ task_schema = TaskSchema()
 
 
 def test_update(test_app, test_db):
-    task_dict = dict(name='fdsa', tag='coding', duration=300)
+    task_dict = dict(name="fdsa", tag="coding", duration=300)
     task = Task(**task_dict)
     test_db.session.add(task)
     test_db.session.commit()
 
     # updates = dict(tag='fishing', duration=123)
-    updates = dict(tag='fishing', duration=123)
+    updates = dict(tag="fishing", duration=123)
     updates = task_schema.load(updates, partial=True)
 
-    task = Task.query.filter_by(name='fdsa').first()
-    test_db.session.query(Task).filter_by(name='fdsa').update(updates)
-    task = Task.query.filter_by(name='fdsa').first()
+    task = Task.query.filter_by(name="fdsa").first()
+    test_db.session.query(Task).filter_by(name="fdsa").update(updates)
+    task = Task.query.filter_by(name="fdsa").first()
 
     assert task.duration == 123
-    assert task.tag == 'fishing'
-
-
-
-
-
-
-
-
-
+    assert task.tag == "fishing"

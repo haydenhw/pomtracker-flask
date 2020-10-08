@@ -2,13 +2,14 @@ import random
 from pomtracker.projects.models import ProjectModel
 from pomtracker.tasks.models import TaskModel
 
+
 class Factory:
     @staticmethod
-    def add_project(project_name, user_id='abc123'):
+    def add_project(project_name, user_id="abc123"):
         return ProjectModel.create(project_name=project_name, user_id=user_id)
 
     @staticmethod
-    def fake_project_data(project_name, user_id='abc123'):
+    def fake_project_data(project_name, user_id="abc123"):
         return dict(project_name=project_name, user_id=user_id)
 
     @staticmethod

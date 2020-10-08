@@ -16,4 +16,3 @@ class TaskSchema(Schema):
 
 task_schema = TaskSchema()
 task_list_schema = TaskSchema(many=True)
-

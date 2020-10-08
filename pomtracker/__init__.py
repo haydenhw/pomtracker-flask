@@ -7,6 +7,7 @@ from pomtracker.tasks.views import TaskList, Task
 from pomtracker.extensions import db
 from pomtracker.ping import ping_blueprint
 
+
 def create_app():
 
     # instantiate the app
@@ -19,10 +20,12 @@ def create_app():
     db.init_app(app)
 
     # register views
-    app.add_url_rule('/api/projects', view_func=ProjectList.as_view('project_list'))
-    app.add_url_rule('/api/projects/<int:project_id>', view_func=Project.as_view('project'))
-    app.add_url_rule('/api/tasks', view_func=TaskList.as_view('task_list'))
-    app.add_url_rule('/api/tasks/<int:task_id>', view_func=Task.as_view('task'))
+    app.add_url_rule("/api/projects", view_func=ProjectList.as_view("project_list"))
+    app.add_url_rule(
+        "/api/projects/<int:project_id>", view_func=Project.as_view("project")
+    )
+    app.add_url_rule("/api/tasks", view_func=TaskList.as_view("task_list"))
+    app.add_url_rule("/api/tasks/<int:task_id>", view_func=Task.as_view("task"))
     app.register_blueprint(ping_blueprint)
 
     # register error handling
@@ -31,6 +34,3 @@ def create_app():
         return jsonify(err.messages), 400
 
     return app
-
-
-

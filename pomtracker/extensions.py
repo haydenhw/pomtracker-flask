@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class CrudMixin:
     @classmethod
     def find_by_id(cls, id_):

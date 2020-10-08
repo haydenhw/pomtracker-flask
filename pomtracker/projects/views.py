@@ -8,19 +8,19 @@ from pomtracker.projects.schemas import project_schema, project_list_schema
 
 class ProjectList(MethodView):
     def get(self):
-        user_id = request.args.get('userid')
+        user_id = request.args.get("userid")
         if not user_id:
-            return {'message': gettext('project_user_id_required')}, 400
+            return {"message": gettext("project_user_id_required")}, 400
 
         projects = ProjectModel.find_by_user_id(user_id)
         return project_list_schema.dumps(projects), 200
 
     def post(self):
         project_data = project_schema.load(request.get_json())
-        project_name = project_data['project_name']
+        project_name = project_data["project_name"]
 
         if ProjectModel.find_by_name(project_name):
-            return {'message': gettext('project_name_exists').format(project_name)}, 400
+            return {"message": gettext("project_name_exists").format(project_name)}, 400
 
         project = ProjectModel.create(**project_data)
 
@@ -30,7 +30,7 @@ class ProjectList(MethodView):
 class Project(MethodView):
     def patch(self, project_id):
         if not ProjectModel.find_by_id(project_id):
-            return {'message': gettext('project_not_found').format(project_id)}, 404
+            return {"message": gettext("project_not_found").format(project_id)}, 404
 
         update_data = project_schema.load(request.get_json(), partial=True)
         updated_project = ProjectModel.update_by_id(update_data, project_id)
@@ -43,4 +43,4 @@ class Project(MethodView):
             project.delete_from_db()
             return project_schema.dumps(project), 200
 
-        return {'message': gettext('project_not_found').format(project_id)}, 404
+        return {"message": gettext("project_not_found").format(project_id)}, 404

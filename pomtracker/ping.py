@@ -1,10 +1,8 @@
 from flask import Blueprint
 
-ping_blueprint = Blueprint('ping', __name__)
+ping_blueprint = Blueprint("ping", __name__)
 
-@ping_blueprint.route('/ping')
+
+@ping_blueprint.route("/ping")
 def ping():
-    return {
-        'status': 'success',
-        'message': 'pong'
-    }
+    return {"status": "success", "message": "pong"}

@@ -15,6 +15,5 @@ class ProjectSchema(Schema):
     date_created = fields.Str()
 
 
-project_schema = ProjectSchema(exclude=['tasks.project_id'])
+project_schema = ProjectSchema(exclude=["tasks.project_id"])
 project_list_schema = ProjectSchema(many=True)
-

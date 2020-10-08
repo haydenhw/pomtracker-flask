@@ -10,7 +10,10 @@ class TaskModel(db.Model, CrudMixin,):
     client_id = db.Column(db.String(80))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now)
-    name_key = 'task_name'
+
+    @classmethod
+    def find_by_name(cls, name):
+        return cls.query.filter_by(task_name=name).first()
 
     @classmethod
     def create_from_list(cls, tasks_data, project_id):

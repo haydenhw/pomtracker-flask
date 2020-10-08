@@ -12,22 +12,18 @@ class CrudMixin:
         return cls.query.filter_by(user_id=user_id).all()
 
     @classmethod
-    def find_by_name(cls, name):
-        arg_dict = {}
-        arg_dict[cls.name_key] = name
-        return cls.query.filter_by(**arg_dict).first()
-
-    @classmethod
     def create(cls, **kwargs):
-        project = cls(**kwargs)
-        db.session.add(project)
+        item = cls(**kwargs)
+        db.session.add(item)
         db.session.commit()
-        return project
+        return item
 
     @classmethod
     def update_by_id(cls, updates, id_):
         cls.query.filter_by(id=id_).update(updates)
         db.session.commit()
+        # find the newly updated row and return it
+        return cls.query.filter_by(id=id_).first()
 
     def save_to_db(self) -> None:
         db.session.add(self)

@@ -33,11 +33,8 @@ class Project(MethodView):
             return {'message': gettext('project_not_found').format(project_id)}, 404
 
         update_data = project_schema.load(request.get_json(), partial=True)
-
-        ProjectModel.update_by_id(update_data, project_id)
-        project = ProjectModel.find_by_id(project_id)
-
-        return project_schema.dumps(project), 200
+        updated_project = ProjectModel.update_by_id(update_data, project_id)
+        return project_schema.dumps(updated_project), 200
 
     def delete(self, project_id):
         project = ProjectModel.find_by_id(project_id)

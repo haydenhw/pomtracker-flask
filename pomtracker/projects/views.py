@@ -9,6 +9,7 @@ from pomtracker.projects.schemas import project_schema, project_list_schema
 class ProjectList(MethodView):
     def get(self):
         user_id = request.args.get("userid")
+
         if not user_id:
             return {"message": gettext("project_user_id_required")}, 400
 
@@ -39,8 +40,8 @@ class Project(MethodView):
     def delete(self, project_id):
         project = ProjectModel.find_by_id(project_id)
 
-        if project:
-            project.delete_from_db()
-            return project_schema.dumps(project), 200
+        if not project:
+            return {"message": gettext("project_not_found").format(project_id)}, 404
 
-        return {"message": gettext("project_not_found").format(project_id)}, 404
+        project.delete_from_db()
+        return project_schema.dumps(project), 200

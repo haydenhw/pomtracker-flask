@@ -38,8 +38,8 @@ class Task(MethodView):
     def delete(self, task_id):
         task = TaskModel.find_by_id(task_id)
 
-        if task:
-            task.delete_from_db()
-            return task_schema.dumps(task), 200
+        if not task:
+            return {"message": gettext("task_not_found").format(task_id)}, 404
 
-        return {"message": gettext("task_not_found").format(task_id)}, 404
+        task.delete_from_db()
+        return task_schema.dumps(task), 200

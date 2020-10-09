@@ -9,7 +9,6 @@ from pomtracker.ping import ping_blueprint
 
 
 def create_app():
-
     # instantiate the app
     app = Flask(__name__)
     CORS(app)
